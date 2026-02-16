@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Add a smooth transition for the whole site background */
+body {
+  @apply transition-colors duration-700 ease-in-out bg-slate-900 text-white;
+  margin: 0;
+  overflow-x: hidden;
+}
