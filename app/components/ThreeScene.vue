@@ -1,30 +1,40 @@
-<!-- <script setup lang="ts">
-import { OrbitControls } from '@tresjs/cientos'
-import { useThemeStore } from '@/stores/theme'
+<script setup lang="ts">
+import { OrbitControls, GLTFModel } from '@tresjs/cientos'
+import { ref, onMounted } from 'vue'
+import gsap from 'gsap'
 
-const theme = useThemeStore()
-const ballRef = ref()
+const positionY = ref(0)
+const orbitRef = ref()
 
-const moveBall = (x: number, y: number) => {
-  if (ballRef.value) {
-    ballRef.value.position.x += x * 0.1
-    ballRef.value.position.z += y * 0.1
-  }
-}
+onMounted(() => {
+  gsap.to(positionY, {
+    value: -5,
+    duration: 1,
+    yoyo: true,
+    repeat: -1,
+    ease: "bounce.out"
+  })
+})
 
-defineExpose({ moveBall })
-</script> -->
+// Expose OrbitControls ref to parent
+defineExpose({
+  controls: orbitRef
+})
+</script>
 
 <template>
-  <div class="fixed inset-0 pointer-events-none">
-    <TresCanvas window-size clear-color="black">
-      <TresPerspectiveCamera />
-      <OrbitControls />
-      <TresMesh>
-        <TresSphereGeometry />
-        <TresMeshNormalMaterial />
-      </TresMesh>
-      <TresGridHelper />
-    </TresCanvas>
-  </div>
+  <TresCanvas window-size clear-color="black">
+    <TresPerspectiveCamera :position="[0, 2, 5]" />
+    <OrbitControls ref="orbitRef" />
+
+    <GLTFModel
+      path="/logo.gltf"
+      :position-y="positionY"
+      :scale="[1,1,1]"
+    />
+
+    <TresAmbientLight />
+    <TresDirectionalLight :position="[5,5,5]" />
+    <TresGridHelper />
+  </TresCanvas>
 </template>

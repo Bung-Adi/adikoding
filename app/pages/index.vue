@@ -3,9 +3,8 @@ import { useThemeStore } from '@/stores/theme'
 
 const theme = useThemeStore()
 
-// Update the 3D ball color when this page loads
 onMounted(() => {
-  theme.setPage('home') // Sets color to #20afdb
+  theme.setPage('home')
 })
 
 // SEO metadata for the Home page
