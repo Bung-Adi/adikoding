@@ -1,10 +1,8 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "@nuxt/ui";
 
-/* Add a smooth transition for the whole site background */
-body {
-  @apply transition-colors duration-700 ease-in-out bg-slate-900 text-white;
-  margin: 0;
-  overflow-x: hidden;
+@theme {
+  --color-home-blue: #20afdb;
+  --color-create-blue: #225cae;
+  --color-camp-green: #57da3d;
 }

@@ -10,17 +10,18 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@nuxt/ui": "^4.4.0",
     "@nuxtjs/supabase": "^2.0.3",
-    "@nuxtjs/tailwindcss": "^6.14.0",
     "@pinia/nuxt": "^0.11.3",
     "@tiptap/starter-kit": "^3.19.0",
     "@tiptap/vue-3": "^3.19.0",
-    "@tresjs/cientos": "^5.4.0",
-    "@tresjs/core": "^5.5.0",
     "nuxt": "^4.3.1",
-    "tailwindcss": "^3.4.19",
-    "three": "^0.182.0",
     "vue": "^3.5.28",
     "vue-router": "^4.6.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.0",
+    "@types/node": "^25.2.3",
+    "tailwindcss": "^4.0.0"
   }
 }

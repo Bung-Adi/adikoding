@@ -1,21 +1,35 @@
-<template>
-  <div class="relative min-h-screen">
-    <ThreeScene ref="sceneRef" />
+<script setup lang="ts">
+import { useThemeStore } from '@/stores/theme'
 
-    <AppSidebar class="hidden md:flex" />
-    
-    <main class="pt-10 pb-24 md:pb-10 px-4">
+const route = useRoute()
+const theme = useThemeStore()
+
+// Map route paths to page names used by the theme store
+const routePageMap: Record<string, string> = {
+  '/': 'home',
+  '/creation': 'creation',
+  '/campaign': 'campaign',
+}
+
+// Set the theme on initial load
+theme.setPage(routePageMap[route.path] ?? 'home')
+
+// Update theme reactively on every navigation
+watch(
+  () => route.path,
+  (path) => {
+    theme.setPage(routePageMap[path] ?? 'home')
+  }
+)
+</script>
+
+<template>
+  <div class="flex min-h-screen">
+    <AppSidebar class="hidden md:flex shrink-0" />
+
+    <main class="flex-1 p-4 pb-24 transition-all duration-300 md:ml-20 lg:ml-64 md:pb-4">
       <slot />
     </main>
-
-    <div class="fixed bottom-8 left-8 z-50 md:bottom-12 md:left-12">
-      <div 
-        class="w-24 h-24 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center touch-none"
-        @touchstart="handleAnalogStart"
-      >
-        <div class="w-10 h-10 rounded-full bg-white/40 shadow-xl" />
-      </div>
-    </div>
 
     <MobileNav class="md:hidden" />
   </div>

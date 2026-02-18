@@ -9,13 +9,4 @@
 # 1. Initialize Nuxt (minimal)
 npx nuxi@latest init [ProjectName]
 cd [ProjectName]
-
-# 2. Install Core Modules (Tailwind, Supabase, Pinia)
-npm i tailwindcss @nuxtjs/supabase @pinia/nuxt
-
-# 3. Install Three.js and TresJS (Vue-friendly Three.js)
-npm install three @tresjs/core @tresjs/cientos
-
-# 4. Install TipTap for the Owner Dashboard
-npm install @tiptap/vue-3 @tiptap/starter-kit
 ```
