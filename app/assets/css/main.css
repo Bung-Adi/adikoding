@@ -6,3 +6,9 @@
   --color-create-blue: #225cae;
   --color-camp-green: #57da3d;
 }
+
+@layer base {
+  body {
+    @apply bg-slate-900 text-white transition-colors duration-700 ease-in-out overflow-x-hidden;
+  }
+}

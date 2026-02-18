@@ -4,6 +4,7 @@ export default defineNuxtConfig({
   },
   compatibilityDate: '2026-02-18',
   modules: [
+    '@tresjs/nuxt',
     '@nuxtjs/supabase',
     '@pinia/nuxt',
     '@nuxt/ui',

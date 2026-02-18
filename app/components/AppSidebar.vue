@@ -3,18 +3,20 @@ import { useThemeStore } from '@/stores/theme'
 
 const theme = useThemeStore()
 
+const darkModeIcon = "heroicons:sun-solid"
+
 const navLinks = [
-  { name: 'Home', path: '/', color: '#20afdb' },
-  { name: 'Creation', path: '/creation', color: '#225cae' },
-  { name: 'Campaign', path: '/campaign', color: '#57da3d' }
+  { name: 'Home', path: '/', icon: 'heroicons:home-solid', color: '#20afdb' },
+  { name: 'Creation', path: '/creation', icon: 'heroicons:sparkles-solid', color: '#225cae' },
+  { name: 'Campaign', path: '/campaign', icon: 'heroicons:rocket-launch-solid', color: '#57da3d' }
 ]
 
 const socials = [
-  { icon: 'simple-icons:youtube', link: '#' },
-  { icon: 'simple-icons:tiktok', link: '#' },
-  { icon: 'simple-icons:instagram', link: '#' },
-  { icon: 'simple-icons:github', link: '#' },
-  { icon: 'simple-icons:discord', link: '#' },
+  { icon: 'akar-icons:youtube-fill', link: '#' },
+  { icon: 'akar-icons:tiktok-fill', link: '#' },
+  { icon: 'akar-icons:instagram-fill', link: '#' },
+  { icon: 'akar-icons:github-fill', link: '#' },
+  { icon: 'akar-icons:discord-fill', link: '#' },
 ]
 </script>
 
@@ -33,24 +35,19 @@ const socials = [
         v-for="item in navLinks" 
         :key="item.name"
         :to="item.path"
-        class="flex items-center gap-4 p-3 transition-all rounded-xl group text-white/50 hover:text-white hover:bg-white/5"
+        :style="{ backgroundColor: theme.activePage === item.name.toLowerCase() ? item.color : 'transparent' }"
+        class="flex items-stretch gap-4 p-3 transition-all rounded-xl group text-white/50 hover:text-white hover:bg-white/5"
       >
-        <div 
-          class="w-2 h-2 transition-all duration-500 rounded-full"
-          :style="{ 
-            backgroundColor: theme.activePage === item.name.toLowerCase() ? item.color : 'transparent',
-            boxShadow: theme.activePage === item.name.toLowerCase() ? `0 0 10px ${item.color}` : 'none'
-          }"
-        />
+        <Icon :name="item.icon" class="mb-1 text-2xl" />
         <span class="hidden font-medium lg:block">{{ item.name }}</span>
       </NuxtLink>
     </nav>
 
     <div class="p-4 space-y-6 border-t border-white/10">
       <div class="grid grid-cols-1 gap-2 lg:grid-cols-3">
-        <a v-for="s in socials" :key="s.icon" :href="s.link" class="flex justify-center p-2 transition-colors text-white/40 hover:text-white">
-          <span :name="s.icon" class="text-xl" />
-        </a>
+        <NuxtLink v-for="s in socials" :key="s.icon" :to="s.link" class="flex justify-center p-2 transition-colors text-white/40 hover:text-white">
+          <Icon :name="s.icon" class="text-xl" />
+        </NuxtLink>
       </div>
 
       <div class="flex flex-col items-center justify-between gap-2 lg:flex-row">
@@ -60,16 +57,9 @@ const socials = [
           <option value="cn">ZH</option>
         </select>
         <button class="p-2 text-white/60 hover:text-white">
-          <span class="i-heroicons-moon-20-solid lg:i-heroicons-sun-20-solid" />
+          <Icon :name="darkModeIcon" class="mb-1 text-2xl" />
         </button>
       </div>
     </div>
   </aside>
 </template>
-
-<!-- <style scoped>
-@reference "tailwindcss";
- .router-link-active {
-  @apply bg-white/10;
-}
-</style> -->

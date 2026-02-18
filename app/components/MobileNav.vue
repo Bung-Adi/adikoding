@@ -10,8 +10,11 @@ const navLinks = [
 ]
 
 const socials = [
-  { name: 'YouTube', icon: 'simple-icons:youtube', link: '#' },
-  { name: 'Discord', icon: 'simple-icons:discord', link: '#' }
+  { name: 'YouTube', icon: 'akar-icons:youtube-fill', link: '#' },
+  { name: 'TikTok', icon: 'akar-icons:tiktok-fill', link: '#' },
+  { name: 'Instagram', icon: 'akar-icons:instagram-fill', link: '#' },
+  { name: 'GitHub', icon: 'akar-icons:github-fill', link: '#' },
+  { name: 'Discord', icon: 'akar-icons:discord-fill', link: '#' },
 ]
 
 const toggleMenu = () => {
