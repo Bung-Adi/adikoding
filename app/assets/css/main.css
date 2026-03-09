@@ -5,10 +5,17 @@
   --color-home-blue: #20afdb;
   --color-create-blue: #225cae;
   --color-camp-green: #57da3d;
+  --main-dark: #020617;
 }
 
 @layer base {
   body {
     @apply bg-slate-900 text-white transition-colors duration-700 ease-in-out overflow-x-hidden;
+  }
+  .admin-input {
+    @apply w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[--color-create-blue] transition-colors;
+  }
+  .admin-label {
+    @apply block text-[10px] uppercase tracking-widest text-white/30 font-bold;
   }
 }

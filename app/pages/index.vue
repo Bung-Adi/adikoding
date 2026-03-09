@@ -9,8 +9,8 @@ onMounted(() => {
 
 // SEO metadata for the Home page
 useSeoMeta({
-  title: 'Indie Dev Studio | Home',
-  ogTitle: 'Indie Dev Studio',
+  title: 'AdiKoding | Dev and Course',
+  ogTitle: 'AdiKoding',
   description: 'Welcome to my indie development portfolio and course landing page.',
   ogDescription: 'Explore my latest creations, games, and web apps.',
   twitterCard: 'summary_large_image',
@@ -23,8 +23,8 @@ useSeoMeta({
     <div class="w-full max-w-2xl p-8 md:p-12 bg-white/10 backdrop-blur-xl border border-white/20 rounded-[2rem] shadow-2xl transition-all duration-500 hover:bg-white/15">
       
       <header class="text-center">
-        <h1 class="mb-4 text-5xl font-black tracking-tighter text-transparent md:text-7xl bg-gradient-to-br from-white to-white/60 bg-clip-text">
-          ADIKODING
+        <h1 class="mb-4 text-5xl font-black tracking-tighter text-transparent md:text-7x1 leading-18 bg-gradient-to-br from-white to-white/60 bg-clip-text">
+          AdiKoding
         </h1>
         <p class="mb-8 text-lg font-medium md:text-xl text-blue-200/80">
           Crafting digital experiences through code and 3D.

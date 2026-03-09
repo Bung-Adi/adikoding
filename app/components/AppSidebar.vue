@@ -3,6 +3,14 @@ import { useThemeStore } from '@/stores/theme'
 
 const theme = useThemeStore()
 
+// const settings = ref({ 
+//   github: '#',
+//   tiktok: '#',
+//   discord: '#',
+//   youtube: '#',
+//   instagram: '#'
+// })
+
 const darkModeIcon = "heroicons:sun-solid"
 
 const navLinks = [
@@ -23,11 +31,8 @@ const socials = [
 <template>
   <aside class="fixed top-0 left-0 z-40 flex flex-col w-20 h-screen transition-all duration-300 border-r lg:w-64 bg-white/5 backdrop-blur-xl border-white/10">
     <div class="flex items-center justify-center gap-4 p-6 lg:justify-start">
-      <div 
-        class="w-10 h-10 transition-colors duration-500 rounded-lg" 
-        :style="{ backgroundColor: theme.ballColor }"
-      />
-      <span class="hidden text-xl font-black tracking-tighter text-white lg:block">ADIKODING</span>
+      <img src="/logomark.webp" alt="AdiKoding Logo Mark" class="w-10 h-10 duration-500 rounded-lg"/>
+      <span class="hidden text-xl font-black tracking-tighter text-white lg:block">AdiKoding</span>
     </div>
 
     <nav class="flex-1 px-4 mt-10 space-y-2">
@@ -50,15 +55,15 @@ const socials = [
         </NuxtLink>
       </div>
 
-      <div class="flex flex-col items-center justify-between gap-2 lg:flex-row">
-        <select class="p-1 text-xs bg-transparent border rounded outline-none text-white/60 border-white/10">
+      <div class="flex flex-col items-center justify-center align gap-2 lg:flex-row">
+        <select class="px-3 py-2 text-sm rounded-md border border-white/20 bg-gray-800 text-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500">
           <option value="en">EN</option>
           <option value="id">ID</option>
           <option value="cn">ZH</option>
         </select>
-        <button class="p-2 text-white/60 hover:text-white">
+        <!-- <button class="p-2 text-white/60 hover:text-white">
           <Icon :name="darkModeIcon" class="mb-1 text-2xl" />
-        </button>
+        </button> -->
       </div>
     </div>
   </aside>
