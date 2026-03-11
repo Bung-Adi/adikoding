@@ -18,9 +18,9 @@ const handleLogin = async () => {
 </script>
 
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-[#0f172a] p-6">
+  <div class="min-h-screen flex items-center justify-center bg-(--main-dark)/50 p-6">
     <div class="w-full max-w-md p-8 rounded-[2.5rem] bg-white/5 border border-white/10 backdrop-blur-xl">
-      <h1 class="text-2xl font-black text-white mb-8 tracking-tighter">ADMIN ACCESS_</h1>
+      <h1 class="text-2xl font-black text-white mb-8 tracking-tighter">ADMIN ACCESS</h1>
       
       <form @submit.prevent="handleLogin" class="space-y-6">
         <input 
@@ -39,7 +39,7 @@ const handleLogin = async () => {
           :disabled="loading"
           class="w-full py-4 bg-[--color-create-blue] text-white font-black rounded-xl hover:brightness-110 transition-all disabled:opacity-50"
         >
-          {{ loading ? 'AUTHENTICATING...' : 'ENTER STUDIO' }}
+          {{ loading ? 'AUTHENTICATING...' : 'ENTER' }}
         </button>
       </form>
     </div>

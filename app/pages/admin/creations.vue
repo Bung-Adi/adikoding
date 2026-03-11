@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { toRaw } from 'vue'
+
 definePageMeta({ 
   middleware: 'auth',
   layout: 'admin'
@@ -7,38 +9,109 @@ definePageMeta({
 const supabase = useSupabaseClient()
 const creations = ref<any[]>([])
 const isEditing = ref(false)
-const activeLang = ref('en')
+const activeLang = ref<'en' | 'id' | 'zh'>('en')
+const loading = ref(false)
 
-// Form State
-const form = ref({
+const initialForm = {
+  id: null,
   title: '',
   slug: '',
   category: 'web',
   tech_stack: [] as string[],
-  links: [] as {label: string, url: string}[],
+  links: [] as { id: string, label: string, url: string }[],
   content: { en: '', id: '', zh: '' },
+  seo_metadata: { 
+    title: { en: '', id: '', zh: '' }, 
+    description: { en: '', id: '', zh: '' } 
+  },
   thumbnail_url: ''
-})
+}
+
+const form = ref(structuredClone(initialForm))
 
 const fetchCreations = async () => {
   const { data } = await supabase.from('creations').select('*').order('created_at', { ascending: false })
   if (data) creations.value = data
 }
 
-const addTech = (event: any) => {
-  const val = event.target.value.trim()
+const resetAndClose = () => {
+  form.value = structuredClone(initialForm)
+  isEditing.value = false
+  activeLang.value = 'en' // reset language for consistency
+}
+
+const startEdit = (item: any) => {
+  const baseForm = JSON.parse(JSON.stringify(initialForm))
+  
+  form.value = {
+    ...baseForm,
+    ...item,
+    // Deep merge the nested objects specifically to avoid null errors
+    content: { ...baseForm.content, ...item.content },
+    seo_metadata: {
+      title: { ...baseForm.seo_metadata.title, ...(item.seo_metadata?.title || {}) },
+      description: { ...baseForm.seo_metadata.description, ...(item.seo_metadata?.description || {}) }
+    },
+    // Ensure arrays exist even if they were null in DB
+    tech_stack: item.tech_stack || [],
+    links: item.links || []
+  }
+  
+  isEditing.value = true
+}
+
+const addTech = (event: Event) => {
+  const input = event.target as HTMLInputElement | null
+  if (!input) return
+  const val = input.value.trim()
   if (val && !form.value.tech_stack.includes(val)) {
     form.value.tech_stack.push(val)
-    event.target.value = ''
+    input.value = ''
   }
 }
 
+const addLink = () => {
+  form.value.links.push({ id: crypto.randomUUID(), label: '', url: '' })
+}
+const removeLink = (id: string) => {
+  form.value.links = form.value.links.filter(link => link.id !== id)
+}
+
 const saveCreation = async () => {
-  const { error } = await supabase.from('creations').upsert([form.value])
-  if (!error) {
-    alert('Project Saved!')
-    isEditing.value = false
-    fetchCreations()
+  loading.value = true
+  const payload = JSON.parse(JSON.stringify(toRaw(form.value)))
+
+  try {
+    let error
+
+    if (payload.id) {
+      // Extract id separately
+      const id = payload.id
+      delete payload.id  // don't send id in update body
+
+      const { error: updateError } = await supabase
+        .from('creations')
+        .update(payload)
+        .eq('id', id)
+      error = updateError
+    } else {
+      // Insert new record
+      delete payload.id
+      const { error: insertError } = await supabase
+        .from('creations')
+        .insert(payload)
+      error = insertError
+    }
+
+    if (error) throw error
+
+    alert('Project synchronized successfully!')
+    resetAndClose()
+    await fetchCreations()
+  } catch (error: any) {
+    alert(`Error: ${error.message}`)
+  } finally {
+    loading.value = false
   }
 }
 
@@ -46,61 +119,96 @@ onMounted(fetchCreations)
 </script>
 
 <template>
-  <div class="min-h-screen bg-(--main-dark)/50 text-white p-8">
-    <div class="max-w-6xl mx-auto">
-      <div class="flex justify-between items-center mb-12">
-        <h1 class="text-3xl font-black uppercase tracking-tighter">Creations Manager</h1>
-        <button 
-          @click="isEditing = !isEditing" 
-          class="px-6 py-2 bg-[--color-create-blue] rounded-full font-bold text-sm"
-        >
-          {{ isEditing ? 'CANCEL' : 'ADD NEW PROJECT' }}
+  <div class="max-w-6xl mx-auto">
+    <div class="flex justify-between items-center mb-12">
+      <h1 class="text-3xl font-black uppercase tracking-tighter">Creations_Manager</h1>
+      <button 
+        @click="isEditing ? resetAndClose() : isEditing = true" 
+        class="px-6 py-2 rounded-full font-bold text-sm transition-all"
+        :class="isEditing ? 'bg-white/10 text-white' : 'bg-[--color-create-blue] text-white'"
+      >
+        {{ isEditing ? 'CANCEL' : 'ADD NEW PROJECT' }}
+      </button>
+    </div>
+
+    <div v-if="!isEditing" class="grid gap-4">
+      <div v-for="item in creations" :key="item.id" 
+        class="p-6 bg-white/5 border border-white/10 rounded-3xl flex justify-between items-center group hover:border-[--color-create-blue]/50 transition-all"
+      >
+        <div>
+          <span class="text-[10px] text-[--color-create-blue] font-bold uppercase tracking-widest">{{ item.category }}</span>
+          <h3 class="text-xl font-bold">{{ item.title }}</h3>
+          <p class="text-white/20 text-xs font-mono mt-1">/{{ item.slug }}</p>
+        </div>
+        <button @click="startEdit(item)" class="px-5 py-2 bg-white/5 hover:bg-white/10 rounded-xl text-sm font-bold border border-white/5">
+          Edit Project
         </button>
       </div>
+    </div>
 
-      <div v-if="!isEditing" class="grid gap-4">
-        <div v-for="item in creations" :key="item.id" class="p-4 bg-white/5 border border-white/10 rounded-2xl flex justify-between items-center">
-          <div>
-            <span class="text-[10px] text-[--color-create-blue] font-bold uppercase">{{ item.category }}</span>
-            <h3 class="text-xl font-bold">{{ item.title }}</h3>
-          </div>
-          <div class="flex gap-2">
-             <button @click="form = item; isEditing = true" class="p-2 hover:bg-white/10 rounded-lg">Edit</button>
-          </div>
-        </div>
-      </div>
-
-      <div v-else class="bg-white/5 border border-white/10 p-8 rounded-[2.5rem] space-y-8">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div class="space-y-4">
-            <input v-model="form.title" placeholder="Project Title" class="admin-input" />
-            <input v-model="form.slug" placeholder="url-slug-name" class="admin-input" />
-            <select v-model="form.category" class="admin-input">
-              <option value="web">Web</option>
-              <option value="games">Games</option>
-              <option value="apps">Apps</option>
-            </select>
+    <div v-else class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div class="bg-white/5 border border-white/10 p-8 rounded-[2.5rem] space-y-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+          <div class="space-y-6">
+            <h2 class="text-xs font-bold text-white/30 uppercase tracking-[0.3em]">Basic Information</h2>
+            <div class="space-y-4">
+              <input v-model="form.title" placeholder="Project Title" class="admin-input" />
+              <input v-model="form.slug" placeholder="url-slug-name" class="admin-input" />
+              <select v-model="form.category" class="admin-input">
+                <option value="web">Web</option>
+                <option value="games">Games</option>
+                <option value="apps">Apps</option>
+              </select>
+              <input v-model="form.thumbnail_url" placeholder="Thumbnail URL (from Supabase Storage)" class="admin-input" />
+            </div>
           </div>
 
-          <div>
-            <label class="block text-[10px] text-white/30 uppercase mb-2">Tech Stack (Press Enter)</label>
-            <input @keydown.enter="addTech" placeholder="e.g. Nuxt, Three.js" class="admin-input" />
-            <div class="flex flex-wrap gap-2 mt-3">
-              <span v-for="t in form.tech_stack" :key="t" class="px-2 py-1 bg-white/10 rounded text-xs">
-                {{ t }} <button @click="form.tech_stack = form.tech_stack.filter(i => i !== t)">×</button>
-              </span>
+          <div class="space-y-6">
+            <h2 class="text-xs font-bold text-white/30 uppercase tracking-[0.3em]">Tech & Connectivity</h2>
+            
+            <div>
+              <input @keydown.enter.prevent="addTech" placeholder="Add Tech (Press Enter)" class="admin-input" />
+              <div class="flex flex-wrap gap-2 mt-3">
+                <span v-for="t in form.tech_stack" :key="t" class="px-3 py-1 bg-[--color-create-blue]/10 border border-[--color-create-blue]/20 rounded-full text-[10px] font-bold">
+                  {{ t }} <button @click="form.tech_stack = form.tech_stack.filter(i => i !== t)" class="ml-2 hover:text-red-400">×</button>
+                </span>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <div v-for="link in form.links" :key="link.id" class="flex gap-2">
+                <input v-model="link.label" placeholder="Label (e.g. GitHub)" class="admin-input !py-2 text-xs" />
+                <input v-model="link.url" placeholder="URL" class="admin-input !py-2 text-xs" />
+                <button @click="removeLink(link.id)" class="p-2 text-red-500 hover:bg-red-500/10 rounded-lg">×</button>
+              </div>
+              <button @click="addLink" class="text-[10px] font-bold text-[--color-create-blue] uppercase tracking-widest">+ Add Link</button>
             </div>
           </div>
         </div>
 
         <div class="pt-8 border-t border-white/10">
-          <div class="flex gap-4 mb-4">
-            <button v-for="l in ['en', 'id', 'zh']" @click="activeLang = l" :class="activeLang === l ? 'text-[--color-create-blue]' : ''" class="uppercase text-xs font-bold">{{ l }}</button>
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xs font-bold text-white/30 uppercase tracking-[0.3em]">Project Narrative</h2>
+            <div class="flex gap-2 p-1 bg-black/40 rounded-lg border border-white/5">
+              <button v-for="l in (['en', 'id', 'zh'] as const)" :key="l" 
+                @click="activeLang = l" 
+                :class="activeLang === l ? 'bg-[--color-create-blue] text-white shadow-lg' : 'text-white/40 hover:text-white'"
+                class="px-4 py-1.5 rounded-md text-[10px] font-black transition-all uppercase"
+              >
+                {{ l }}
+              </button>
+            </div>
           </div>
-          <textarea v-model="form.content[activeLang as keyof typeof form.content]" rows="10" placeholder="HTML or Markdown content..." class="admin-input font-mono text-sm"></textarea>
+          <textarea v-model="form.content[activeLang]" rows="12" placeholder="Write the project story in HTML or Markdown..." class="admin-input font-mono text-sm leading-relaxed"></textarea>
         </div>
 
-        <button @click="saveCreation" class="w-full py-4 bg-white text-black font-black rounded-2xl">PUBLISH CREATION</button>
+        <button 
+          @click="saveCreation" 
+          :disabled="loading"
+          class="w-full py-5 bg-white text-black font-black rounded-2xl hover:bg-[--color-create-blue] hover:text-white transition-all disabled:opacity-50"
+        >
+          {{ loading ? 'SYNCING DATA...' : 'PUBLISH PROJECT' }}
+        </button>
       </div>
     </div>
   </div>

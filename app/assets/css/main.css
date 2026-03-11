@@ -18,4 +18,7 @@
   .admin-label {
     @apply block text-[10px] uppercase tracking-widest text-white/30 font-bold;
   }
+  .prose iframe {
+    @apply w-full aspect-video rounded-[2rem] border border-white/10 my-8;
+  }
 }

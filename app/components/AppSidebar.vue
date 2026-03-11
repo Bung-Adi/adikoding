@@ -1,15 +1,9 @@
 <script setup lang="ts">
 import { useThemeStore } from '@/stores/theme'
 
+const { locale } = useLanguage()
+const { settings } = useSettings()
 const theme = useThemeStore()
-
-// const settings = ref({ 
-//   github: '#',
-//   tiktok: '#',
-//   discord: '#',
-//   youtube: '#',
-//   instagram: '#'
-// })
 
 const darkModeIcon = "heroicons:sun-solid"
 
@@ -19,13 +13,21 @@ const navLinks = [
   { name: 'Campaign', path: '/campaign', icon: 'heroicons:rocket-launch-solid', color: '#57da3d' }
 ]
 
-const socials = [
-  { icon: 'akar-icons:youtube-fill', link: '#' },
-  { icon: 'akar-icons:tiktok-fill', link: '#' },
-  { icon: 'akar-icons:instagram-fill', link: '#' },
-  { icon: 'akar-icons:github-fill', link: '#' },
-  { icon: 'akar-icons:discord-fill', link: '#' },
+const socialConfig = [
+  { icon: 'akar-icons:youtube-fill', key: 'youtube' },
+  { icon: 'akar-icons:tiktok-fill', key: 'tiktok' },
+  { icon: 'akar-icons:github-fill', key: 'github' },
+  { icon: 'akar-icons:discord-fill', key: 'discord' },
+  { icon: 'akar-icons:instagram-fill', key: 'instagram' }, 
 ]
+
+const socials = computed(() => {
+  if (!settings.value?.social_links) return []
+  return socialConfig.map(s => ({
+    icon: s.icon,
+    link: settings.value.social_links[s.key] || '#'
+  }))
+})
 </script>
 
 <template>
@@ -56,10 +58,10 @@ const socials = [
       </div>
 
       <div class="flex flex-col items-center justify-center align gap-2 lg:flex-row">
-        <select class="px-3 py-2 text-sm rounded-md border border-white/20 bg-gray-800 text-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <select v-model="locale" class="px-3 py-2 text-sm rounded-md border border-white/20 bg-gray-800 text-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500">
           <option value="en">EN</option>
           <option value="id">ID</option>
-          <option value="cn">ZH</option>
+          <option value="zh">ZH</option>
         </select>
         <!-- <button class="p-2 text-white/60 hover:text-white">
           <Icon :name="darkModeIcon" class="mb-1 text-2xl" />
