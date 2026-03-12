@@ -1,6 +1,7 @@
 <script setup lang="ts">
   const { campaigns, loading } = useCampaigns()
-  const { locale } = useLanguage()
+  const { locale } = useI18n()
+  const localePath = useLocalePath()
 
   // Sort campaigns by date_range (interpreting date strings where possible)
   const sortedCampaigns = computed(() => {
@@ -10,16 +11,21 @@
       return dateA - dateB
     })
   })
+
+  useHead({
+      title: 'Campaigns | AdiKoding Studio',
+      meta: [{ name: 'description', content: 'Active initiatives and special projects currently running at AdiKoding Studio.' }]
+    })
 </script>
 
 <template>
   <div class="px-4 py-12 mx-auto max-w-7xl">
     <header class="mb-16">
       <h1 class="text-5xl font-black tracking-tighter text-white">
-        CAMPAIGNS<span class="text-[--color-create-blue]">.</span>
+        {{ $t('campaigns.title') }}<span class="text-[--color-camp-green]">.</span>
       </h1>
       <p class="max-w-xl mt-4 text-white/50">
-        Active initiatives and special projects currently running at AdiKoding Studio.
+        {{ $t('campaigns.subtitle') }}
       </p>
     </header>
 
@@ -27,7 +33,7 @@
       <div 
         v-for="item in sortedCampaigns" 
         :key="item.id"
-        class="group relative bg-[#0f172a]/40 border border-white/5 rounded-[2rem] overflow-hidden hover:border-white/20 transition-all"
+        class="group relative bg-white/10 border border-white/5 rounded-[2rem] overflow-hidden hover:border-[var(--color-camp-green)]/50 hover:bg-white/5 transition-all"
       >
         <div class="flex flex-col lg:flex-row">
           
@@ -72,7 +78,7 @@
               </div>
               <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden">
                 <div 
-                  class="h-full bg-[--color-create-blue] transition-all duration-1000"
+                  class="h-full bg-[var(--color-camp-green)] transition-all duration-1000"
                   :style="{ width: `${item.progress}%` }"
                 ></div>
               </div>
@@ -80,10 +86,10 @@
 
             <div class="mt-auto flex gap-6 items-center">
                <NuxtLink 
-                :to="`/campaign/${item.slug}`"
-                class="px-8 py-3 bg-white text-black font-black rounded-xl hover:bg-[--color-create-blue] hover:text-white transition-all text-sm uppercase"
+                :to="localePath(`/campaign/${item.slug}`)"
+                class="px-8 py-3 bg-white/5 text-white-200 font-black rounded-xl hover:bg-[var(--color-camp-green)] hover:text-white transition-all text-sm uppercase"
                >
-                 See The Details
+                 {{ $t('campaigns.post-btn') }}
                </NuxtLink>
             </div>
           </div>

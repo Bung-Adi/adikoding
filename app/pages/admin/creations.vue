@@ -105,13 +105,13 @@
 </script>
 
 <template>
-  <div class="max-w-6xl mx-auto">
+  <div class="max-w-6xl mx-auto bg-(--main-dark)/50">
     <div class="flex justify-between items-center mb-12">
       <h1 class="text-3xl font-black uppercase tracking-tighter">Creations_Manager</h1>
       <button 
         @click="isEditing ? resetAndClose() : isEditing = true" 
-        class="px-6 py-2 rounded-full font-bold text-sm transition-all"
-        :class="isEditing ? 'bg-white/10 text-white' : 'bg-[--color-create-blue] text-white'"
+        class="px-6 py-2 bg-[var(--color-create-blue)] rounded-full font-bold text-sm hover:bg-blue-600 transition-all"
+        :class="isEditing ? 'bg-white/10 text-white' : 'bg-[var(--color-create-blue)] text-white'"
       >
         {{ isEditing ? 'CANCEL' : 'ADD NEW PROJECT' }}
       </button>
@@ -119,10 +119,10 @@
 
     <div v-if="!isEditing" class="grid gap-4">
       <div v-for="item in creations" :key="item.id" 
-        class="p-6 bg-white/5 border border-white/10 rounded-3xl flex justify-between items-center group hover:border-[--color-create-blue]/50 transition-all"
+        class="p-6 bg-white/5 border border-white/10 rounded-3xl flex justify-between items-center group hover:border-[var(--color-create-blue)]/50 transition-all"
       >
         <div>
-          <span class="text-[10px] text-[--color-create-blue] font-bold uppercase tracking-widest">{{ item.category }}</span>
+          <span class="text-[10px] text-[var(--color-create-blue)] font-bold uppercase tracking-widest">{{ item.category }}</span>
           <h3 class="text-xl font-bold">{{ item.title }}</h3>
           <p class="text-white/20 text-xs font-mono mt-1">/{{ item.slug }}</p>
         </div>
@@ -155,7 +155,7 @@
             <div>
               <input @keydown.enter.prevent="addTech" placeholder="Add Tech (Press Enter)" class="admin-input" />
               <div class="flex flex-wrap gap-2 mt-3">
-                <span v-for="t in form.tech_stack" :key="t" class="px-3 py-1 bg-[--color-create-blue]/10 border border-[--color-create-blue]/20 rounded-full text-[10px] font-bold">
+                <span v-for="t in form.tech_stack" :key="t" class="px-3 py-1 bg-[var(--color-create-blue)]/10 border border-[var(--color-create-blue)]/20 rounded-full text-[10px] font-bold">
                   {{ t }} <button @click="form.tech_stack = form.tech_stack.filter(i => i !== t)" class="ml-2 hover:text-red-400">×</button>
                 </span>
               </div>
@@ -167,7 +167,7 @@
                 <input v-model="link.url" placeholder="URL" class="admin-input !py-2 text-xs" />
                 <button @click="removeLink(link.id)" class="p-2 text-red-500 hover:bg-red-500/10 rounded-lg">×</button>
               </div>
-              <button @click="addLink" class="text-[10px] font-bold text-[--color-create-blue] uppercase tracking-widest">+ Add Link</button>
+              <button @click="addLink" class="text-[10px] font-bold text-[var(--color-create-blue)] uppercase tracking-widest">+ Add Link</button>
             </div>
           </div>
         </div>
@@ -178,7 +178,7 @@
             <div class="flex gap-2 p-1 bg-black/40 rounded-lg border border-white/5">
               <button v-for="l in (['en', 'id', 'zh'] as const)" :key="l" 
                 @click="activeLang = l" 
-                :class="activeLang === l ? 'bg-[--color-create-blue] text-white shadow-lg' : 'text-white/40 hover:text-white'"
+                :class="activeLang === l ? 'bg-[var(--color-create-blue)] text-white shadow-lg' : 'text-white/40 hover:text-white'"
                 class="px-4 py-1.5 rounded-md text-[10px] font-black transition-all uppercase"
               >
                 {{ l }}
@@ -191,7 +191,7 @@
         <button 
           @click="saveCreation" 
           :disabled="loading"
-          class="w-full py-5 bg-white text-black font-black rounded-2xl hover:bg-[--color-create-blue] hover:text-white transition-all disabled:opacity-50"
+          class="w-full py-5 bg-[var(--color-create-blue)] text-black font-black rounded-2xl hover:bg-blue-600 hover:text-white transition-all disabled:opacity-50"
         >
           {{ loading ? 'SYNCING DATA...' : 'PUBLISH PROJECT' }}
         </button>

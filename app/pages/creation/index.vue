@@ -1,6 +1,7 @@
 <script setup lang="ts">
   const { creations, loading } = useCreations()
-  const { locale } = useLanguage()
+  const { locale } = useI18n()
+  const localePath = useLocalePath()
 
   useHead({
     title: 'Creations | AdiKoding Studio',
@@ -12,10 +13,10 @@
   <div class="px-4 py-12 mx-auto max-w-7xl">
     <header class="mb-16">
       <h1 class="text-5xl font-black tracking-tighter text-white">
-        CREATIONS<span class="decoration-[--color-create-blue]">.</span>
+        {{ $t('creations.title') }}<span class="decoration-[var(--color-create-blue)]">.</span>
       </h1>
       <p class="max-w-xl mt-4 text-white/50">
-        A collection of experimental projects, indie games, and digital experiences built at AdiKoding Studio.
+        {{ $t('creations.subtitle') }}
       </p>
     </header>
 
@@ -27,7 +28,7 @@
       <div 
         v-for="item in creations" 
         :key="item.id"
-        class="relative flex flex-col p-4 overflow-hidden transition-all border group rounded-[2rem] bg-[#0f172a]/40 border-white/5 hover:border-[--color-create-blue]/30 hover:bg-white/5"
+        class="relative flex flex-col p-4 overflow-hidden transition-all border group rounded-[2rem] bg-white/10 border-white/5 hover:border-[var(--color-create-blue)]/50 hover:bg-white/5"
       >
         <div class="mb-5 overflow-hidden aspect-video rounded-2xl bg-slate-900 border border-white/5">
           <img 
@@ -43,17 +44,16 @@
 
         <div class="flex flex-col flex-1">
           <div class="flex items-center justify-between mb-2">
-            <span class="text-[10px] font-black uppercase tracking-[0.2em] text-[--color-create-blue]">
+            <span class="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--color-create-blue)]">
               {{ item.category }}
             </span>
-            <span class="text-[10px] text-white/20 font-mono">#{{ item.id }}</span>
           </div>
 
-          <h3 class="mb-3 text-2xl font-black text-white group-hover:text-[--color-create-blue] transition-colors">
+          <h3 class="mb-3 text-2xl font-black text-white group-hover:text-[var(--color-create-blue)] transition-colors">
             {{ item.title }}
           </h3>
 
-          <div class="flex flex-wrap gap-2 mb-8">
+          <div class="flex flex-wrap gap-2 mb-2">
             <span 
               v-for="tech in item.tech_stack?.slice(0, 3)" 
               :key="tech"
@@ -68,17 +68,17 @@
 
           <div class="mt-auto pt-4 border-t border-white/5 flex justify-between items-center">
             <NuxtLink 
-              :to="'/creation/' + item.slug"
+              :to="localePath('/creation/' + item.slug)"
               class="text-[10px] font-black uppercase tracking-widest text-white hover:text-[--color-create-blue] transition-all"
             >
-              PROJECT_DETAILS
+              {{ $t('creations.post-btn') }}
             </NuxtLink>
             
             <NuxtLink 
-              :to="'/creation/' + item.slug"
-              class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 text-white group-hover:bg-[--color-create-blue] transition-all"
+              :to="localePath('/creation/' + item.slug)"
+              class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 text-white hover:bg-[var(--color-create-blue)] transition-all"
             >
-              <Icon name="heroicons:arrow-right-20-solid" class="group-hover:translate-x-0.5 transition-transform" />
+              <Icon name="heroicons:arrow-up-right-20-solid"/>
             </NuxtLink>
           </div>
         </div>

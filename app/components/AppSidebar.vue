@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { useThemeStore } from '@/stores/theme'
 
-const { locale } = useLanguage()
+const { locale, setLocale } = useI18n()
+const localePath = useLocalePath()
 const { settings } = useSettings()
 const theme = useThemeStore()
 
-const darkModeIcon = "heroicons:sun-solid"
+// const darkModeIcon = "heroicons:sun-solid"
 
 const navLinks = [
   { name: 'Home', path: '/', icon: 'heroicons:home-solid', color: '#20afdb' },
@@ -28,6 +29,11 @@ const socials = computed(() => {
     link: settings.value.social_links[s.key] || '#'
   }))
 })
+
+const currentLocale = computed({
+  get: () => locale.value,
+  set: (val) => setLocale(val)
+})
 </script>
 
 <template>
@@ -41,7 +47,7 @@ const socials = computed(() => {
       <NuxtLink 
         v-for="item in navLinks" 
         :key="item.name"
-        :to="item.path"
+        :to="localePath(item.path)"
         :style="{ backgroundColor: theme.activePage === item.name.toLowerCase() ? item.color : 'transparent' }"
         class="flex items-stretch gap-4 p-3 transition-all rounded-xl group text-white/50 hover:text-white hover:bg-white/5"
       >
@@ -58,7 +64,7 @@ const socials = computed(() => {
       </div>
 
       <div class="flex flex-col items-center justify-center align gap-2 lg:flex-row">
-        <select v-model="locale" class="px-3 py-2 text-sm rounded-md border border-white/20 bg-gray-800 text-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <select v-model="currentLocale" class="px-3 py-2 text-sm rounded-md border border-white/20 bg-gray-800 text-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500">
           <option value="en">EN</option>
           <option value="id">ID</option>
           <option value="zh">ZH</option>

@@ -1,24 +1,24 @@
 <script setup lang="ts">
-import { useThemeStore } from '@/stores/theme'
+  import { useThemeStore } from '@/stores/theme'
 
-const { settings } = useSettings()
-const { locale } = useLanguage()
-const theme = useThemeStore()
+  const { settings } = useSettings()
+  const { locale } = useI18n()
+  const theme = useThemeStore()
 
-const dc_link = settings.value.social_links["discord"]
+  const dc_link = settings.value.social_links["discord"]
 
-onMounted(() => {
-  theme.setPage('home')
-})
+  onMounted(() => {
+    theme.setPage('home')
+  })
 
-// SEO metadata for the Home page
-const seoTitle = computed(() => settings.value?.home_meta?.title?.[locale.value] || 'AdiKoding Studio')
-const seoDesc = computed(() => settings.value?.home_meta?.description?.[locale.value] || '')
+  // SEO metadata for the Home page
+  const seoTitle = computed(() => settings.value?.home_meta?.title?.[locale.value] || 'AdiKoding Studio')
+  const seoDesc = computed(() => settings.value?.home_meta?.description?.[locale.value] || '')
 
-useHead({
-  title: seoTitle,
-  meta: [{ name: 'description', content: seoDesc }]
-})
+  useHead({
+    title: seoTitle,
+    meta: [{ name: 'description', content: seoDesc }]
+  })
 </script>
 
 <template>

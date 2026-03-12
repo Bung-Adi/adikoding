@@ -6,6 +6,7 @@ const links = [
   { name: 'Dashboard', path: '/admin/dashboard', icon: 'heroicons:squares-2x2' },
   { name: 'Creations', path: '/admin/creations', icon: 'heroicons:rocket-launch' },
   { name: 'Campaigns', path: '/admin/campaigns', icon: 'heroicons:fire' },
+  { name: 'Media', path: '/admin/media', icon: 'heroicons:video-camera' },
 ]
 
 const handleLogout = async () => {
@@ -34,7 +35,7 @@ const handleLogout = async () => {
     </nav>
 
     <div class="p-4 space-y-6 border-t border-white/10">
-      <div class="flex flex-col items-center justify-center align gap-2 lg:flex-row">
+      <div class="flex flex-col items-center justify-center gap-2 align lg:flex-row">
       <NuxtLink to="/" class="text-[10px] text-white/30 hover:text-white uppercase tracking-widest transition-colors">View Site</NuxtLink>
       <button 
         @click="handleLogout" 

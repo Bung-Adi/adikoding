@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const route = useRoute()
 const { getCreationBySlug, loading } = useCreations()
-const { locale } = useLanguage()
+const { locale } = useI18n()
 
 const project = getCreationBySlug(route.params.slug as string)
 

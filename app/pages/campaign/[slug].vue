@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const route = useRoute()
 const { getCampaignBySlug, loading } = useCampaigns()
-const { locale } = useLanguage()
+const { locale } = useI18n()
 
 const campaign = getCampaignBySlug(route.params.slug as string)
 

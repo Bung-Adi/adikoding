@@ -64,7 +64,7 @@
           :key="lang.code"
           @click="activeLang = lang.code"
           :class="['w-full text-left px-4 py-3 rounded-xl transition-all font-bold text-sm', 
-            activeLang === lang.code ? 'bg-[--color-create-blue] text-white' : 'bg-white/5 text-white/40 hover:bg-white/10']"
+            activeLang === lang.code ? 'bg-[var(--color-home-blue)] text-white' : 'bg-white/5 text-white/40 hover:bg-white/10']"
         >
           {{ lang.label }} Content
         </button>
@@ -89,7 +89,7 @@
           </div>
 
           <div class="pt-6 border-t border-white/10">
-            <h3 class="text-xs font-bold mb-4 text-[--color-create-blue]">Global Social Links</h3>
+            <h3 class="text-xs font-bold mb-4 text-[var(--color-home-blue)]">Global Social Links</h3>
             <div class="grid grid-cols-2 gap-4">
               <div v-for="(val, key) in settings.social_links" :key="key">
                 <label class="block text-[10px] uppercase text-white/30 mb-1">{{ key }}</label>
@@ -102,7 +102,7 @@
         <button 
           @click="handleSave"
           :disabled="loading"
-          class="w-full py-4 bg-white text-black font-black rounded-2xl hover:bg-[--color-create-blue] hover:text-white transition-all disabled:opacity-50"
+          class="w-full py-4 bg-[var(--color-home-blue)] text-black font-black rounded-2xl hover:bg-blue-400 hover:text-white transition-all disabled:opacity-50"
         >
           {{ loading ? 'SAVING CHANGES...' : 'PUBLISH SETTINGS' }}
         </button>
