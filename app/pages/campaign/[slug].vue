@@ -1,22 +1,15 @@
 <script setup lang="ts">
 const route = useRoute()
-const supabase = useSupabaseClient()
-const slug = route.params.slug
+const { getCampaignBySlug, loading } = useCampaigns()
+const { locale } = useLanguage()
 
-// Fetch specific campaign details
-const { data: campaign, error } = await useAsyncData(`campaign-${slug}`, async () => {
-  const { data } = await supabase
-    .from('campaigns')
-    .select('*')
-    .eq('slug', slug)
-    .single()
-  
-  if (!data) throw createError({ statusCode: 404, message: 'Campaign not found' })
-  return data
-})
+const campaign = getCampaignBySlug(route.params.slug as string)
 
 useHead({
-  title: campaign.value ? `${campaign.value.title} | AdiKoding` : 'Campaign'
+  title: campaign.value ? `${campaign.value.title} | AdiKoding` : 'Campaign',
+  meta: [
+    { name: 'description', content: computed(() => campaign.value?.seo_metadata?.description?.[locale.value] || '') }
+  ]
 })
 </script>
 
@@ -24,6 +17,10 @@ useHead({
   <div class="min-h-screen">
     <div class="relative h-[60vh] flex items-end px-6 pb-12 overflow-hidden">
       <div class="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-transparent to-transparent z-10" />
+      <img 
+        :src="campaign.thumbnail_url" 
+        class="absolute inset-0 w-full h-full object-cover z-0"
+      />
       <div class="absolute top-[-10%] right-[-10%] w-96 h-96 bg-[--color-create-blue]/20 blur-[120px] rounded-full" />
       
       <div class="max-w-7xl mx-auto w-full z-20">
@@ -31,7 +28,7 @@ useHead({
           <Icon name="heroicons:arrow-left-20-solid" /> Back to Campaigns
         </NuxtLink>
         
-        <h1 class="text-6xl font-black text-white tracking-tighter uppercase lg:text-8xl">
+        <h1 class="text-4xl font-black text-white tracking-tighter uppercase lg:text-5xl">
           {{ campaign?.title }}
         </h1>
       </div>
@@ -41,30 +38,31 @@ useHead({
       <div class="lg:col-span-2 space-y-12">
         <section>
           <h3 class="text-xs uppercase tracking-[0.3em] text-[--color-create-blue] font-bold mb-6">Mission Briefing</h3>
-          <div class="prose prose-invert prose-lg max-w-none text-white/70">
-            {{ campaign?.description }}
-          </div>
+          <div 
+            class="prose prose-invert prose-blue max-w-none 
+                  prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tighter
+                  prose-p:text-white/60 prose-p:leading-relaxed prose-p:text-lg
+                  prose-img:rounded-[2.5rem] prose-img:border prose-img:border-white/10"
+            v-html="campaign.content[locale]"
+          ></div>
         </section>
-
-        <div class="grid grid-cols-2 gap-4">
-          <div class="aspect-square rounded-3xl bg-white/5 border border-white/10" />
-          <div class="aspect-square rounded-3xl bg-white/5 border border-white/10" />
-        </div>
       </div>
 
       <aside class="space-y-6">
         <div class="p-8 rounded-[2.5rem] bg-white/5 border border-white/10 backdrop-blur-xl sticky top-8">
           <div class="space-y-8">
-            <div>
+            <div v-if="campaign.progress > 0">
               <div class="flex justify-between items-end mb-2">
                 <span class="text-xs font-bold text-white/40 uppercase">Campaign Progress</span>
-                <span class="text-2xl font-black text-white">{{ campaign?.progress }}%</span>
               </div>
-              <div class="h-2 w-full bg-white/10 rounded-full overflow-hidden">
+              <div class="relative w-full md:w-48 h-48 shrink-0 flex items-center justify-center">
+                <div class="absolute inset-0 rounded-full border-4 border-white/5" />
                 <div 
-                  class="h-full bg-[--color-create-blue] transition-all duration-1000" 
-                  :style="{ width: `${campaign?.progress}%` }"
+                  class="absolute inset-0 rounded-full border-4 border-[--color-create-blue] border-t-transparent -rotate-45" 
                 />
+                <div class="text-center">
+                  <span class="block text-3xl font-black text-white">{{ campaign.progress || 0 }}%</span>
+                </div>
               </div>
             </div>
 
@@ -79,9 +77,6 @@ useHead({
               </div>
             </div>
 
-            <button class="w-full py-4 bg-white text-black font-black rounded-2xl hover:scale-105 transition-transform active:scale-95 shadow-xl">
-              CONTRIBUTE NOW
-            </button>
           </div>
         </div>
       </aside>

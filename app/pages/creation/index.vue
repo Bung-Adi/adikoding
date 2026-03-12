@@ -10,9 +10,9 @@
 
 <template>
   <div class="px-4 py-12 mx-auto max-w-7xl">
-    <header class="mb-12">
-      <h1 class="text-4xl font-black tracking-tighter text-white lg:text-6xl uppercase">
-        CREATIONS<span class="text-[--color-create-blue]">.</span>
+    <header class="mb-16">
+      <h1 class="text-5xl font-black tracking-tighter text-white">
+        CREATIONS<span class="decoration-[--color-create-blue]">.</span>
       </h1>
       <p class="max-w-xl mt-4 text-white/50">
         A collection of experimental projects, indie games, and digital experiences built at AdiKoding Studio.

@@ -1,121 +1,107 @@
 <script setup lang="ts">
-import { toRaw } from 'vue'
+  import { toRaw } from 'vue'
 
-definePageMeta({ 
-  middleware: 'auth',
-  layout: 'admin'
-})
+  definePageMeta({ 
+    middleware: 'auth',
+    layout: 'admin'
+  })
 
-const supabase = useSupabaseClient()
-const creations = ref<any[]>([])
-const isEditing = ref(false)
-const activeLang = ref<'en' | 'id' | 'zh'>('en')
-const loading = ref(false)
+  const { creations, refreshCreations } = useCreations()
+  const supabase = useSupabaseClient()
 
-const initialForm = {
-  id: null,
-  title: '',
-  slug: '',
-  category: 'web',
-  tech_stack: [] as string[],
-  links: [] as { id: string, label: string, url: string }[],
-  content: { en: '', id: '', zh: '' },
-  seo_metadata: { 
-    title: { en: '', id: '', zh: '' }, 
-    description: { en: '', id: '', zh: '' } 
-  },
-  thumbnail_url: ''
-}
+  const isEditing = ref(false)
+  const activeLang = ref<'en' | 'id' | 'zh'>('en')
+  const loading = ref(false)
 
-const form = ref(structuredClone(initialForm))
-
-const fetchCreations = async () => {
-  const { data } = await supabase.from('creations').select('*').order('created_at', { ascending: false })
-  if (data) creations.value = data
-}
-
-const resetAndClose = () => {
-  form.value = structuredClone(initialForm)
-  isEditing.value = false
-  activeLang.value = 'en' // reset language for consistency
-}
-
-const startEdit = (item: any) => {
-  const baseForm = JSON.parse(JSON.stringify(initialForm))
-  
-  form.value = {
-    ...baseForm,
-    ...item,
-    // Deep merge the nested objects specifically to avoid null errors
-    content: { ...baseForm.content, ...item.content },
-    seo_metadata: {
-      title: { ...baseForm.seo_metadata.title, ...(item.seo_metadata?.title || {}) },
-      description: { ...baseForm.seo_metadata.description, ...(item.seo_metadata?.description || {}) }
+  const initialForm = {
+    id: null,
+    title: '',
+    slug: '',
+    category: 'web',
+    tech_stack: [] as string[],
+    links: [] as { id: string, label: string, url: string }[],
+    content: { en: '', id: '', zh: '' },
+    seo_metadata: { 
+      title: { en: '', id: '', zh: '' }, 
+      description: { en: '', id: '', zh: '' } 
     },
-    // Ensure arrays exist even if they were null in DB
-    tech_stack: item.tech_stack || [],
-    links: item.links || []
+    thumbnail_url: ''
   }
-  
-  isEditing.value = true
-}
 
-const addTech = (event: Event) => {
-  const input = event.target as HTMLInputElement | null
-  if (!input) return
-  const val = input.value.trim()
-  if (val && !form.value.tech_stack.includes(val)) {
-    form.value.tech_stack.push(val)
-    input.value = ''
-  }
-}
+  const form = ref(structuredClone(initialForm))
 
-const addLink = () => {
-  form.value.links.push({ id: crypto.randomUUID(), label: '', url: '' })
-}
-const removeLink = (id: string) => {
-  form.value.links = form.value.links.filter(link => link.id !== id)
-}
-
-const saveCreation = async () => {
-  loading.value = true
-  const payload = JSON.parse(JSON.stringify(toRaw(form.value)))
-
-  try {
-    let error
-
-    if (payload.id) {
-      // Extract id separately
-      const id = payload.id
-      delete payload.id  // don't send id in update body
-
-      const { error: updateError } = await supabase
-        .from('creations')
-        .update(payload)
-        .eq('id', id)
-      error = updateError
-    } else {
-      // Insert new record
-      delete payload.id
-      const { error: insertError } = await supabase
-        .from('creations')
-        .insert(payload)
-      error = insertError
+  const addTech = (event: Event) => {
+    const input = event.target as HTMLInputElement | null
+    if (!input) return
+    const val = input.value.trim()
+    if (val && !form.value.tech_stack.includes(val)) {
+      form.value.tech_stack.push(val)
+      input.value = ''
     }
-
-    if (error) throw error
-
-    alert('Project synchronized successfully!')
-    resetAndClose()
-    await fetchCreations()
-  } catch (error: any) {
-    alert(`Error: ${error.message}`)
-  } finally {
-    loading.value = false
   }
-}
 
-onMounted(fetchCreations)
+  const removeTech = (tech: string) => {
+    form.value.tech_stack = form.value.tech_stack.filter(t => t !== tech)
+  }
+
+  const addLink = () => {
+    form.value.links.push({ id: crypto.randomUUID(), label: '', url: '' })
+  }
+
+  const removeLink = (id: string) => {
+    form.value.links = form.value.links.filter(link => link.id !== id)
+  }
+
+  const resetAndClose = () => {
+    form.value = structuredClone(initialForm)
+    isEditing.value = false
+    activeLang.value = 'en'
+  }
+
+  const startEdit = (item: any) => {
+    const baseForm = JSON.parse(JSON.stringify(initialForm))
+    form.value = {
+      ...baseForm,
+      ...item,
+      content: { ...baseForm.content, ...item.content },
+      seo_metadata: {
+        title: { ...baseForm.seo_metadata.title, ...(item.seo_metadata?.title || {}) },
+        description: { ...baseForm.seo_metadata.description, ...(item.seo_metadata?.description || {}) }
+      },
+      tech_stack: item.tech_stack || [],
+      links: item.links || []
+    }
+    isEditing.value = true
+  }
+
+  const saveCreation = async () => {
+    loading.value = true
+    const payload = JSON.parse(JSON.stringify(toRaw(form.value)))
+
+    try {
+      let error
+      if (payload.id) {
+        const id = payload.id
+        delete payload.id
+        const { error: updateError } = await supabase.from('creations').update(payload).eq('id', id)
+        error = updateError
+      } else {
+        delete payload.id
+        const { error: insertError } = await supabase.from('creations').insert(payload)
+        error = insertError
+      }
+
+      if (error) throw error
+
+      alert('Project synchronized successfully!')
+      resetAndClose()
+      await refreshCreations() // Syncs the global state
+    } catch (error: any) {
+      alert(`Error: ${error.message}`)
+    } finally {
+      loading.value = false
+    }
+  }
 </script>
 
 <template>

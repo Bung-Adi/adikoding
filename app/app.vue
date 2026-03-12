@@ -2,11 +2,13 @@
 const { locale } = useLanguage()
 const { refreshSettings } = useSettings()
 const { refreshCreations } = useCreations()
+const { refreshCampaigns } = useCampaigns()
 
 await useAsyncData('init-app', async () => {
   await Promise.all([
     refreshSettings(),
-    refreshCreations()
+    refreshCreations(),
+    refreshCampaigns()
   ])
 })
 </script>

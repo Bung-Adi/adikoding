@@ -1,40 +1,51 @@
 <script setup lang="ts">
-definePageMeta({ 
-  middleware: 'auth',
-  layout: 'admin'
-})
+  import { toRaw } from 'vue'
 
-const supabase = useSupabaseClient()
-const loading = ref(false)
-const activeLang = ref('en') // Switcher for JSONB editing
-const settings = ref<any>(null)
+  definePageMeta({ 
+    middleware: 'auth',
+    layout: 'admin'
+  })
 
-// Languages to support
-const langs = [
-  { code: 'en', label: 'English' },
-  { code: 'id', label: 'Indonesia' },
-  { code: 'zh', label: 'Mandarin' }
-]
+  const supabase = useSupabaseClient()
+  // 1. Destructure refreshSettings to sync global state after save
+  const { settings, refreshSettings } = useSettings()
+  const loading = ref(false)
+  const activeLang = ref('en')
 
-// Load current settings
-const fetchSettings = async () => {
-  const { data } = await supabase.from('site_settings').select('*').single()
-  if (data) settings.value = data
-}
+  const langs = [
+    { code: 'en', label: 'English' },
+    { code: 'id', label: 'Indonesia' },
+    { code: 'zh', label: 'Mandarin' }
+  ]
 
-onMounted(fetchSettings)
+  const handleSave = async () => {
+    if (!settings.value) return
+    
+    loading.value = true
+    
+    // 2. Use toRaw and clone to ensure a clean payload
+    const payload = JSON.parse(JSON.stringify(toRaw(settings.value)))
+    const id = payload.id
+    delete payload.id // Standard practice: don't send ID in the update body
 
-const handleSave = async () => {
-  loading.value = true
-  const { error } = await supabase
-    .from('site_settings')
-    .update(settings.value)
-    .eq('id', settings.value.id)
+    try {
+      const { error } = await supabase
+        .from('site_settings')
+        .update(payload)
+        .eq('id', id)
 
-  if (error) alert(error.message)
-  else alert('Settings updated successfully!')
-  loading.value = false
-}
+      if (error) throw error
+      
+      // 3. IMPORTANT: Tell the global state to fetch the new data from DB
+      await refreshSettings()
+      
+      alert('Settings synchronized across the site!')
+    } catch (error: any) {
+      alert(`Update failed: ${error.message}`)
+    } finally {
+      loading.value = false
+    }
+  }
 </script>
 
 <template>
