@@ -15,9 +15,12 @@
   const seoTitle = computed(() => settings.value?.home_meta?.title?.[locale.value] || 'AdiKoding Studio')
   const seoDesc = computed(() => settings.value?.home_meta?.description?.[locale.value] || '')
 
-  useHead({
+  useSeoMeta({
     title: seoTitle,
-    meta: [{ name: 'description', content: seoDesc }]
+    ogTitle: seoTitle,
+    description: seoDesc,
+    ogDescription: seoDesc,
+    ogImage: '/prevew.webp'
   })
 </script>
 

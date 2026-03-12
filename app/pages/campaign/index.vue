@@ -11,11 +11,16 @@
       return dateA - dateB
     })
   })
-
-  useHead({
-      title: 'Campaigns | AdiKoding Studio',
-      meta: [{ name: 'description', content: 'Active initiatives and special projects currently running at AdiKoding Studio.' }]
-    })
+  
+  useSeoMeta({
+    title: $t('campaigns.title'),
+    ogTitle: $t('campaigns.title'),
+    description: $t('campaigns.subtitle'),
+    ogDescription: $t('campaigns.subtitle'),
+    // ogImage: () => project.value?.thumbnail_url,
+    // twitterCard: 'summary_large_image',
+    // ogType: 'article'
+  })
 </script>
 
 <template>
@@ -37,15 +42,16 @@
       >
         <div class="flex flex-col lg:flex-row">
           
-          <div class="lg:w-1/3 aspect-video lg:aspect-square overflow-hidden bg-slate-900">
+          <div class="overflow-hidden lg:w-1/3 aspect-video lg:aspect-square bg-slate-900">
             <img 
               v-if="item.thumbnail_url" 
               :src="item.thumbnail_url" 
-              class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" 
+              class="object-cover w-full h-full transition-all duration-700 grayscale group-hover:grayscale-0"
+              alt="Program campaign thumbnail of {{ item.title }}"
             />
           </div>
 
-          <div class="p-8 lg:p-12 flex-1 flex flex-col justify-center">
+          <div class="flex flex-col justify-center flex-1 p-8 lg:p-12">
             <div class="flex flex-wrap items-center gap-4 mb-6">
               <div 
                 v-if="item.date_range && getStatusBadge(item.date_range)"
@@ -67,16 +73,16 @@
               </span>
             </div>
 
-            <h2 class="text-3xl lg:text-4xl font-black text-white mb-4 uppercase tracking-tighter">
+            <h2 class="mb-4 text-3xl font-black tracking-tighter text-white uppercase lg:text-4xl">
               {{ item.title }}
             </h2>
 
-            <div v-if="item.progress > 0" class="mb-8 max-w-md">
+            <div v-if="item.progress > 0" class="max-w-md mb-8">
               <div class="flex justify-between text-[10px] font-bold mb-2 uppercase tracking-widest text-white/40">
                 <span>Phase Progress</span>
                 <span>{{ item.progress }}%</span>
               </div>
-              <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+              <div class="w-full h-1 overflow-hidden rounded-full bg-white/5">
                 <div 
                   class="h-full bg-[var(--color-camp-green)] transition-all duration-1000"
                   :style="{ width: `${item.progress}%` }"
@@ -84,7 +90,7 @@
               </div>
             </div>
 
-            <div class="mt-auto flex gap-6 items-center">
+            <div class="flex items-center gap-6 mt-auto">
                <NuxtLink 
                 :to="localePath(`/campaign/${item.slug}`)"
                 class="px-8 py-3 bg-white/5 text-white-200 font-black rounded-xl hover:bg-[var(--color-camp-green)] hover:text-white transition-all text-sm uppercase"

@@ -3,9 +3,14 @@
   const { locale } = useI18n()
   const localePath = useLocalePath()
 
-  useHead({
-    title: 'Creations | AdiKoding Studio',
-    meta: [{ name: 'description', content: 'Explore our latest experimental digital works.' }]
+  useSeoMeta({
+    title: $t('creations.title'),
+    ogTitle: $t('creations.title'),
+    description: $t('creations.subtitle'),
+    ogDescription: $t('creations.subtitle'),
+    // ogImage: () => project.value?.thumbnail_url,
+    // twitterCard: 'summary_large_image',
+    // ogType: 'article'
   })
 </script>
 
@@ -30,12 +35,12 @@
         :key="item.id"
         class="relative flex flex-col p-4 overflow-hidden transition-all border group rounded-[2rem] bg-white/10 border-white/5 hover:border-[var(--color-create-blue)]/50 hover:bg-white/5"
       >
-        <div class="mb-5 overflow-hidden aspect-video rounded-2xl bg-slate-900 border border-white/5">
+        <div class="mb-5 overflow-hidden border aspect-video rounded-2xl bg-slate-900 border-white/5">
           <img 
             v-if="item.thumbnail_url" 
             :src="item.thumbnail_url" 
             class="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110" 
-            alt="Project Preview"
+            alt="Project creation thumbnail of {{ item.title }}"
           />
           <div v-else class="flex items-center justify-center w-full h-full text-white/10">
             <Icon name="heroicons:code-bracket-square" class="text-4xl" />
@@ -66,7 +71,7 @@
             </span>
           </div>
 
-          <div class="mt-auto pt-4 border-t border-white/5 flex justify-between items-center">
+          <div class="flex items-center justify-between pt-4 mt-auto border-t border-white/5">
             <NuxtLink 
               :to="localePath('/creation/' + item.slug)"
               class="text-[10px] font-black uppercase tracking-widest text-white hover:text-[--color-create-blue] transition-all"
@@ -86,8 +91,8 @@
     </div>
 
     <div v-else class="py-20 text-center border border-dashed border-white/10 rounded-3xl">
-      <Icon name="heroicons:cube-transparent" class="text-5xl text-white/10 mb-4" />
-      <p class="text-white/20 font-bold uppercase tracking-widest">No transmissions found in the archive.</p>
+      <Icon name="heroicons:cube-transparent" class="mb-4 text-5xl text-white/10" />
+      <p class="font-bold tracking-widest uppercase text-white/20">No transmissions found in the archive.</p>
     </div>
   </div>
 </template>
