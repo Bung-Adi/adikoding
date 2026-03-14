@@ -106,8 +106,8 @@
 
 <template>
   <div class="max-w-6xl mx-auto bg-(--main-dark)/50">
-    <div class="flex justify-between items-center mb-12">
-      <h1 class="text-3xl font-black uppercase tracking-tighter">Creations_Manager</h1>
+    <div class="flex items-center justify-between mb-12">
+      <h1 class="text-3xl font-black tracking-tighter uppercase">Creations_Manager</h1>
       <button 
         @click="isEditing ? resetAndClose() : isEditing = true" 
         class="px-6 py-2 bg-[var(--color-create-blue)] rounded-full font-bold text-sm hover:bg-blue-600 transition-all"
@@ -124,17 +124,17 @@
         <div>
           <span class="text-[10px] text-[var(--color-create-blue)] font-bold uppercase tracking-widest">{{ item.category }}</span>
           <h3 class="text-xl font-bold">{{ item.title }}</h3>
-          <p class="text-white/20 text-xs font-mono mt-1">/{{ item.slug }}</p>
+          <p class="mt-1 font-mono text-xs text-white/20">/{{ item.slug }}</p>
         </div>
-        <button @click="startEdit(item)" class="px-5 py-2 bg-white/5 hover:bg-white/10 rounded-xl text-sm font-bold border border-white/5">
+        <button @click="startEdit(item)" class="px-5 py-2 text-sm font-bold border bg-white/5 hover:bg-white/10 rounded-xl border-white/5">
           Edit Project
         </button>
       </div>
     </div>
 
-    <div v-else class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div v-else class="space-y-8 duration-500 animate-in fade-in slide-in-from-bottom-4">
       <div class="bg-white/5 border border-white/10 p-8 rounded-[2.5rem] space-y-8">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <div class="grid grid-cols-1 gap-10 lg:grid-cols-2">
           <div class="space-y-6">
             <h2 class="text-xs font-bold text-white/30 uppercase tracking-[0.3em]">Basic Information</h2>
             <div class="space-y-4">
@@ -144,6 +144,8 @@
                 <option value="web">Web</option>
                 <option value="games">Games</option>
                 <option value="apps">Apps</option>
+                <option value="3d modeling">3D Modeling</option>
+                <option value="other">Other</option>
               </select>
               <input v-model="form.thumbnail_url" placeholder="Thumbnail URL (from Supabase Storage)" class="admin-input" />
             </div>
@@ -165,7 +167,7 @@
               <div v-for="link in form.links" :key="link.id" class="flex gap-2">
                 <input v-model="link.label" placeholder="Label (e.g. GitHub)" class="admin-input !py-2 text-xs" />
                 <input v-model="link.url" placeholder="URL" class="admin-input !py-2 text-xs" />
-                <button @click="removeLink(link.id)" class="p-2 text-red-500 hover:bg-red-500/10 rounded-lg">×</button>
+                <button @click="removeLink(link.id)" class="p-2 text-red-500 rounded-lg hover:bg-red-500/10">×</button>
               </div>
               <button @click="addLink" class="text-[10px] font-bold text-[var(--color-create-blue)] uppercase tracking-widest">+ Add Link</button>
             </div>
@@ -175,7 +177,7 @@
         <div class="pt-8 border-t border-white/10">
           <div class="flex items-center justify-between mb-4">
             <h2 class="text-xs font-bold text-white/30 uppercase tracking-[0.3em]">Project Narrative</h2>
-            <div class="flex gap-2 p-1 bg-black/40 rounded-lg border border-white/5">
+            <div class="flex gap-2 p-1 border rounded-lg bg-black/40 border-white/5">
               <button v-for="l in (['en', 'id', 'zh'] as const)" :key="l" 
                 @click="activeLang = l" 
                 :class="activeLang === l ? 'bg-[var(--color-create-blue)] text-white shadow-lg' : 'text-white/40 hover:text-white'"
@@ -185,7 +187,12 @@
               </button>
             </div>
           </div>
-          <textarea v-model="form.content[activeLang]" rows="12" placeholder="Write the project story in HTML or Markdown..." class="admin-input font-mono text-sm leading-relaxed"></textarea>
+          <textarea v-model="form.content[activeLang]" rows="12" placeholder="Write the project story in HTML or Markdown..." class="font-mono text-sm leading-relaxed admin-input"></textarea>
+          <div class="space-y-6">
+            <h2 class="text-xs font-bold text-white/30 uppercase tracking-[0.3em]">SEO Metadata</h2>
+            <input v-model="form.seo_metadata.title[activeLang]" placeholder="Project Title" class="admin-input" />
+            <input v-model="form.seo_metadata.description[activeLang]" placeholder="Description (English)" class="admin-input" />
+          </div>
         </div>
 
         <button 
