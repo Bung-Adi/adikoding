@@ -71,7 +71,7 @@ const toggleMenu = () => {
       <NuxtLink 
         v-for="item in navLinks" 
         :key="item.name" 
-        :to="item.path"
+        :to="localePath(item.path)"
         class="flex flex-col items-center"
       >
         <Icon :name="item.icon" class="mb-1 text-2xl" />
