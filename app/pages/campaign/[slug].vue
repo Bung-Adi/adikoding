@@ -5,22 +5,19 @@
 
   const campaign = getCampaignBySlug(route.params.slug as string)
 
+  const SeoTitle = computed(() =>  campaign.value?.seo_metadata?.title?.[locale.value] || "Made by Adikoding")
+  const SeoDetail = computed(() => campaign.value?.seo_metadata?.description?.[locale.value] || "A special project by Adikoding")
+
   useSeoMeta({
-    title: () => campaign.value?.title || 'by Adikoding',
-    ogTitle: () => campaign.value?.title || 'by Adikoding',
-    description: () => campaign.value?.seo_description[locale.value] 
-                    || campaign.value?.description[locale.value] 
-                    || 'A special program by Adikoding',
-    ogDescription: () => campaign.value?.seo_description[locale.value] 
-                    || campaign.value?.description[locale.value] 
-                    || 'A special program by Adikoding',
+    title:  SeoTitle,
+    ogTitle: SeoTitle,
+    description: SeoDetail,
+    ogDescription: SeoDetail,
     ogImage: () => campaign.value?.thumbnail_url 
               || 'https://adikoding.com/nothumbnail.webp',
     twitterCard: 'summary_large_image',
-    twitterTitle: () => campaign.value?.title || 'by Adikoding',
-    twitterDescription: () => campaign.value?.seo_description[locale.value] 
-                        || campaign.value?.description[locale.value] 
-                        || 'A special program by Adikoding',
+    twitterTitle: SeoTitle,
+    twitterDescription: SeoDetail,
     twitterImage: () => campaign.value?.thumbnail_url 
                   || 'https://adikoding.com/nothumbnail.webp',
     ogType: 'article',

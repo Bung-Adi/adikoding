@@ -93,11 +93,11 @@
 
 <template>
   <div class="min-h-screen bg-(--main-dark)/50 text-white p-8">
-    <div class="flex justify-between items-center mb-12">
-      <h1 class="text-3xl font-black uppercase tracking-tighter text-white">Campaigns_Hub</h1>
+    <div class="flex items-center justify-between mb-12">
+      <h1 class="text-3xl font-black tracking-tighter text-white uppercase">Campaigns_Hub</h1>
       <button 
         @click="isEditing = !isEditing; if(!isEditing) resetForm()" 
-        class="px-6 py-2 bg-green-500 rounded-full font-bold text-sm text-white hover:bg-green-600 transition-all"
+        class="px-6 py-2 text-sm font-bold text-white transition-all bg-green-500 rounded-full hover:bg-green-600"
       >
         {{ isEditing ? 'BACK TO LIST' : 'INITIATE NEW CAMPAIGN' }}
       </button>
@@ -107,8 +107,8 @@
       <div v-for="item in campaigns" :key="item.id" 
         class="p-6 bg-white/5 border border-white/10 rounded-[2rem] flex flex-col md:flex-row justify-between items-center gap-6"
       >
-        <div class="flex items-center gap-6 w-full">
-          <div class="w-16 h-16 rounded-2xl bg-white/10 flex-shrink-0 flex items-center justify-center font-black text-green-500">
+        <div class="flex items-center w-full gap-6">
+          <div class="flex items-center justify-center flex-shrink-0 w-16 h-16 font-black text-green-500 rounded-2xl bg-white/10">
             {{ item.progress }}%
           </div>
           <div>
@@ -119,14 +119,14 @@
             <h3 class="text-xl font-bold text-white">{{ item.title }}</h3>
           </div>
         </div>
-        <button @click="editCampaign(item)" class="w-full md:w-auto px-6 py-2 border border-white/10 hover:bg-white/10 rounded-xl font-bold transition-all">
+        <button @click="editCampaign(item)" class="w-full px-6 py-2 font-bold transition-all border md:w-auto border-white/10 hover:bg-white/10 rounded-xl">
           Edit
         </button>
       </div>
     </div>
 
     <div v-else class="space-y-8 bg-white/5 border border-white/10 p-8 rounded-[2.5rem] backdrop-blur-xl">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
         <div class="space-y-4">
           <label class="admin-label">General Info</label>
           <input v-model="form.title" placeholder="Campaign Name" class="admin-input" />
@@ -143,7 +143,7 @@
           </select>
           <div class="flex items-center gap-4">
             <input type="range" v-model.number="form.progress" min="0" max="100" class="flex-1 accent-green-500" />
-            <span class="font-black text-xl w-12">{{ form.progress }}%</span>
+            <span class="w-12 text-xl font-black">{{ form.progress }}%</span>
           </div>
           <input v-model="form.thumbnail_url" placeholder="Thumbnail Image URL" class="admin-input" />
         </div>
@@ -154,7 +154,7 @@
           <button v-for="l in ['en', 'id', 'zh']" :key="l" 
             @click="activeLang = l as 'en' | 'id' | 'zh'" 
             :class="activeLang === l ? 'text-green-500 border-b-2 border-green-500' : 'text-white/40'"
-            class="uppercase text-xs font-black pb-1 transition-all"
+            class="pb-1 text-xs font-black uppercase transition-all"
           >
             {{ l }} Content
           </button>
@@ -163,11 +163,16 @@
           v-model="form.content[activeLang as keyof typeof form.content]" 
           rows="12" 
           placeholder="Describe the campaign mission..." 
-          class="admin-input font-mono text-sm"
+          class="font-mono text-sm admin-input"
         ></textarea>
+        <div class="pt-2 space-y-6">
+          <h2 class="text-xs font-bold text-white/30 uppercase tracking-[0.3em]">SEO Metadata</h2>
+          <input v-model="form.seo_metadata.title[activeLang]" placeholder="Project Title" class="admin-input" />
+          <input v-model="form.seo_metadata.description[activeLang]" placeholder="Description (English)" class="admin-input" />
+        </div>
       </div>
 
-      <button @click="saveCampaign" class="w-full py-4 bg-green-500 text-white font-black rounded-2xl shadow-lg hover:brightness-110 transition-all">
+      <button @click="saveCampaign" class="w-full py-4 font-black text-white transition-all bg-green-500 shadow-lg rounded-2xl hover:brightness-110">
         PUSH UPDATE TO LIVE SITE
       </button>
     </div>

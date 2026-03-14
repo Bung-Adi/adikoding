@@ -188,7 +188,7 @@
             </div>
           </div>
           <textarea v-model="form.content[activeLang]" rows="12" placeholder="Write the project story in HTML or Markdown..." class="font-mono text-sm leading-relaxed admin-input"></textarea>
-          <div class="space-y-6">
+          <div class="pt-2 space-y-6">
             <h2 class="text-xs font-bold text-white/30 uppercase tracking-[0.3em]">SEO Metadata</h2>
             <input v-model="form.seo_metadata.title[activeLang]" placeholder="Project Title" class="admin-input" />
             <input v-model="form.seo_metadata.description[activeLang]" placeholder="Description (English)" class="admin-input" />
