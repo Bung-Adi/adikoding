@@ -5,6 +5,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2026-02-18',
   modules: [
     '@tresjs/nuxt',
+    'nuxt-monaco-editor',
     '@nuxtjs/supabase',
     '@pinia/nuxt',
     '@nuxt/ui',

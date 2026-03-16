@@ -159,12 +159,29 @@
             {{ l }} Content
           </button>
         </div>
-        <textarea 
-          v-model="form.content[activeLang as keyof typeof form.content]" 
-          rows="12" 
-          placeholder="Describe the campaign mission..." 
-          class="font-mono text-sm admin-input"
-        ></textarea>
+        <ClientOnly>
+          <MonacoEditor
+            v-model="form.content[activeLang as keyof typeof form.content]"
+            lang="markdown"
+            :options="{
+              theme: 'vs-dark',
+              minimap: { enabled: false },
+              fontSize: 14,
+              lineHeight: 24,
+              wordWrap: 'on',
+              automaticLayout: true,
+              tabSize: 2,
+              scrollBeyondLastLine: false,
+              padding: { top: 16, bottom: 16 }
+            }"
+            class="h-[500px]"
+          />
+          <template #fallback>
+            <div class="h-[500px] flex items-center justify-center text-white/20 font-mono animate-pulse">
+              Initializing Studio Editor...
+            </div>
+          </template>
+        </ClientOnly>
         <div class="pt-2 space-y-6">
           <h2 class="text-xs font-bold text-white/30 uppercase tracking-[0.3em]">SEO Metadata</h2>
           <input v-model="form.seo_metadata.title[activeLang]" placeholder="Project Title" class="admin-input" />
