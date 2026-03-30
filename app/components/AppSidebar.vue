@@ -11,7 +11,8 @@ const theme = useThemeStore()
 const navLinks = [
   { name: 'Home', path: '/', icon: 'heroicons:home-solid', color: '#20afdb' },
   { name: 'Creation', path: '/creation', icon: 'heroicons:sparkles-solid', color: '#225cae' },
-  { name: 'Campaign', path: '/campaign', icon: 'heroicons:rocket-launch-solid', color: '#57da3d' }
+  { name: 'Campaign', path: '/campaign', icon: 'heroicons:rocket-launch-solid', color: '#57da3d' },
+  { name: 'About', path: '/about', icon: 'heroicons:star-solid', color: '#020617' }
 ]
 
 const socialConfig = [
@@ -19,7 +20,8 @@ const socialConfig = [
   { icon: 'akar-icons:tiktok-fill', key: 'tiktok' },
   { icon: 'akar-icons:github-fill', key: 'github' },
   { icon: 'akar-icons:discord-fill', key: 'discord' },
-  { icon: 'akar-icons:instagram-fill', key: 'instagram' }, 
+  { icon: 'akar-icons:instagram-fill', key: 'instagram' },
+  { icon: 'akar-icons:behance-fill', key: 'behance' },
 ]
 
 const socials = computed(() => {
@@ -48,11 +50,16 @@ const currentLocale = computed({
         v-for="item in navLinks" 
         :key="item.name"
         :to="localePath(item.path)"
-        :style="{ backgroundColor: theme.activePage === item.name.toLowerCase() ? item.color : 'transparent' }"
-        class="flex items-stretch gap-4 p-3 transition-all rounded-xl group text-white/50 hover:text-white hover:bg-white/5"
+        v-slot="{ isActive }" 
       >
-        <Icon :name="item.icon" class="mb-1 text-2xl" />
-        <span class="hidden font-medium lg:block">{{ item.name }}</span>
+        <div 
+          class="flex items-stretch gap-4 p-3 transition-all rounded-xl group hover:bg-white/5"
+          :class="isActive ? 'text-white' : 'text-white/50 hover:text-white'"
+          :style="{ backgroundColor: isActive ? item.color : 'transparent' }"
+        >
+          <Icon :name="item.icon" class="mb-1 text-2xl" />
+          <span class="hidden font-medium lg:block">{{ item.name }}</span>
+        </div>
       </NuxtLink>
     </nav>
 
@@ -63,8 +70,8 @@ const currentLocale = computed({
         </NuxtLink>
       </div>
 
-      <div class="flex flex-col items-center justify-center align gap-2 lg:flex-row">
-        <select v-model="currentLocale" class="px-3 py-2 text-sm rounded-md border border-white/20 bg-gray-800 text-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <div class="flex flex-col items-center justify-center gap-2 align lg:flex-row">
+        <select v-model="currentLocale" class="px-3 py-2 text-sm bg-gray-800 border rounded-md border-white/20 text-white/80 focus:outline-none focus:ring-2 focus:ring-blue-500">
           <option value="en">EN</option>
           <option value="id">ID</option>
           <option value="zh">ZH</option>

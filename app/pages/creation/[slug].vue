@@ -27,7 +27,7 @@
 
 <template>
   <div v-if="project" class="min-h-screen pb-24">
-    <section class="relative h-[60vh] flex items-end px-6 pb-12 overflow-hidden">
+    <section class="relative md:h-[60vh] flex items-end px-4 md:px-6 pb-8 md:pb-12 overflow-hidden">
       <img 
         :src="project.thumbnail_url" 
         class="absolute inset-0 z-0 object-cover w-full h-full"
@@ -42,7 +42,7 @@
           </span>
           <span class="text-white/40 text-[10px] font-mono">/ {{ project.slug }}</span>
         </div>
-        <h1 class="mb-6 text-5xl font-black leading-none tracking-tighter text-white uppercase md:text-7xl">
+        <h1 class="mb-6 text-3xl font-black leading-none tracking-tighter text-white uppercase sm:text-3xl md:text-4xl lg:text-6xl">
           {{ project.title }}
         </h1>
         
@@ -54,9 +54,9 @@
       </div>
     </section>
 
-    <main class="grid max-w-5xl grid-cols-1 gap-12 px-6 mx-auto mt-12 lg:grid-cols-4">
+    <main class="grid max-w-5xl grid-cols-1 gap-8 px-4 mx-auto mt-12 md:grid-cols-3 lg:grid-cols-4 md:px-6">
       
-      <aside class="order-2 space-y-8 lg:col-span-1 lg:order-1">
+      <aside class="order-2 md:col-span-1 lg:order-1">
         <div v-if="project.links?.length" class="space-y-4">
           <h4 class="text-[10px] font-black uppercase text-white/20 tracking-widest">Connect / Links</h4>
           <div class="flex flex-col gap-2">
@@ -69,7 +69,7 @@
         </div>
       </aside>
 
-      <article class="order-1 lg:col-span-3 lg:order-2">
+      <article class="order-1 md:col-span-2 lg:col-span-3 lg:order-2">
         <div 
           class="prose prose-invert prose-blue max-w-none 
                  prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tighter

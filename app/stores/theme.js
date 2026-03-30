@@ -1,4 +1,3 @@
-// stores/theme.js
 import { defineStore } from 'pinia'
 
 export const useThemeStore = defineStore('theme', {
@@ -13,6 +12,7 @@ export const useThemeStore = defineStore('theme', {
       if (page === 'home') this.ballColor = '#20afdb'
       if (page === 'creation') this.ballColor = '#225cae'
       if (page === 'campaign') this.ballColor = '#57da3d'
+      if (page === 'about') this.ballColor = '#020617'
     }
   }
 })

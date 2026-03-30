@@ -13,7 +13,8 @@ const currentLocale = computed({
 const navLinks = [
   { name: 'Home', path: '/', icon: 'heroicons:home-solid' },
   { name: 'Creation', path: '/creation', icon: 'heroicons:sparkles-solid' },
-  { name: 'Campaign', path: '/campaign', icon: 'heroicons:rocket-launch-solid' }
+  { name: 'Campaign', path: '/campaign', icon: 'heroicons:rocket-launch-solid' },
+  { name: 'About', path: '/about', icon: 'heroicons:star-solid' }
 ]
 
 const socials = [
@@ -22,6 +23,7 @@ const socials = [
   { name: 'Instagram', icon: 'akar-icons:instagram-fill', link: '#' },
   { name: 'GitHub', icon: 'akar-icons:github-fill', link: '#' },
   { name: 'Discord', icon: 'akar-icons:discord-fill', link: '#' },
+  { name: 'Behance', icon: 'akar-icons:behance-fill', link: '#' },
 ]
 
 const toggleMenu = () => {
@@ -72,12 +74,23 @@ const toggleMenu = () => {
         v-for="item in navLinks" 
         :key="item.name" 
         :to="localePath(item.path)"
-        class="flex flex-col items-center"
+        v-slot="{ isActive }"
+        class="flex flex-col items-center group"
+        @click="isMenuOpen = false"
       >
-        <Icon :name="item.icon" class="mb-1 text-2xl" />
+        <Icon 
+          :name="item.icon" 
+          class="mb-1 text-2xl transition-colors duration-300" 
+          :class="isActive ? 'text-white' : 'text-white/40 group-hover:text-white'"
+        />
+
         <span 
           class="w-1 h-1 transition-all duration-500 rounded-full" 
-          :style="{ backgroundColor: theme.activePage === item.name.toLowerCase() ? theme.ballColor : 'transparent' }"
+          :style="{ 
+            backgroundColor: isActive ? theme.ballColor : 'transparent',
+            transform: isActive ? 'scale(1.5)' : 'scale(0)',
+            boxShadow: isActive ? `0 0 8px ${theme.ballColor}` : 'none'
+          }"
         />
       </NuxtLink>
 
