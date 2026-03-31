@@ -144,7 +144,7 @@
                 <option value="web">Web</option>
                 <option value="games">Games</option>
                 <option value="apps">Apps</option>
-                <option value="3d modeling">3D Modeling</option>
+                <option value="3d modeling">3D</option>
                 <option value="other">Other</option>
               </select>
               <input v-model="form.thumbnail_url" placeholder="Thumbnail URL (from Supabase Storage)" class="admin-input" />
