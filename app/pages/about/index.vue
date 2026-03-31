@@ -42,13 +42,13 @@
           <img 
           src="https://qqaykrbjyrsafbfttjkd.supabase.co/storage/v1/object/public/media/1774876157619-profile-pic-rl.jpg" 
           class="object-cover rounded-[1rem] w-full h-full transition-transform duration-700 group-hover:scale-110"
-          alt="Adi alias Kuro Adi Profile Pic 2D and Real Life"/>
+          alt="Kuro Adi or Muhammad 'Adi 'Aziz Abdillah"/>
         </div>
         <div class="w-25 h-25 p-1 overflow-hidden transition-all border group rounded-[1rem] bg-white/10 border-white/5 hover:border-[var(--color-create-blue)]/50 hover:bg-white/5">
           <img 
           src="https://qqaykrbjyrsafbfttjkd.supabase.co/storage/v1/object/public/media/1774876169331-Profile2D.png" 
           class="object-cover rounded-[1rem] w-full h-full transition-transform duration-700 group-hover:scale-110"
-          alt="Adi alias Kuro Adi Profile Pic 2D and Real Life"/>
+          alt="Kuro Adi or Muhammad 'Adi' Aziz Abdillah Discord pic"/>
         </div>
       </div>
       <h4 class="text-xs">Adi Reallife & Discord Profile Pic</h4>
