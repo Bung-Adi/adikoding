@@ -2,6 +2,7 @@
 import { useThemeStore } from '@/stores/theme'
 const { locale, setLocale } = useI18n()
 const localePath = useLocalePath()
+const { settings } = useSettings()
 const isMenuOpen = ref(false)
 const theme = useThemeStore()
 
@@ -17,14 +18,23 @@ const navLinks = [
   { name: 'About', path: '/about', icon: 'heroicons:star-solid' }
 ]
 
-const socials = [
-  { name: 'YouTube', icon: 'akar-icons:youtube-fill', link: '#' },
-  { name: 'TikTok', icon: 'akar-icons:tiktok-fill', link: '#' },
-  { name: 'Instagram', icon: 'akar-icons:instagram-fill', link: '#' },
-  { name: 'GitHub', icon: 'akar-icons:github-fill', link: '#' },
-  { name: 'Discord', icon: 'akar-icons:discord-fill', link: '#' },
-  { name: 'Behance', icon: 'akar-icons:behance-fill', link: '#' },
+const socialConfig = [
+  { icon: 'akar-icons:youtube-fill', key: 'youtube' },
+  { icon: 'akar-icons:tiktok-fill', key: 'tiktok' },
+  { icon: 'akar-icons:github-fill', key: 'github' },
+  { icon: 'akar-icons:discord-fill', key: 'discord' },
+  { icon: 'akar-icons:instagram-fill', key: 'instagram' },
+  { icon: 'akar-icons:behance-fill', key: 'behance' },
 ]
+
+const socials = computed(() => {
+  if (!settings.value?.social_links) return []
+  return socialConfig.map(s => ({
+    icon: s.icon,
+    name: s.key,
+    link: settings.value.social_links[s.key] || '#'
+  }))
+})
 
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value
@@ -47,7 +57,7 @@ const toggleMenu = () => {
         <div class="grid grid-cols-3 gap-4">
           <a 
             v-for="social in socials" 
-            :key="social.name" 
+            :key="social.icon" 
             :href="social.link"
             target="_blank"
             class="flex flex-col items-center justify-center p-4 transition-colors rounded-2xl bg-white/5 hover:bg-white/10"
